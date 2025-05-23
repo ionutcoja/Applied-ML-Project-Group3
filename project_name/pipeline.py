@@ -16,8 +16,6 @@ import torch
 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-from tf.keras import layers
-import tf
 
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -27,10 +25,10 @@ from sklearn.utils.class_weight import compute_class_weight
 from sentence_transformers import SentenceTransformer
 from transformers import BertTokenizer, BertModel
 
-from features.text_cleaning import parse_words_dataset
-from features.text_embeddings import embedding_words
+from project_name.features.text_cleaning import parse_words_dataset
+from project_name.features.text_embeddings import embedding_words
 
-from models.model import Model
+from project_name.models.model import Model
 
 
 class Pipeline:
@@ -55,14 +53,12 @@ class Pipeline:
         Splits the dataset into training and testing sets based on the
         specified split ratio.
         """
-        df_train_full = pd.read_csv('sa_spaeng_train.csv')
-        self._dataset_val   = pd.read_csv('sa_spaeng_validation.csv')
-
+        
         self._dataset_train, self._dataset_test = train_test_split(
-            df_train_full,
+            self._dataset_train,
             test_size=0.2,
             random_state=42,
-            stratify=df_train_full['sa']  # Keeps class distribution
+            stratify=self._dataset_train['sa']  # Keeps class distribution
         )
         
     def _preprocess_features(self) -> None:
@@ -86,7 +82,7 @@ class Pipeline:
         input vectors.
         """
 
-        self._model.fit(self._X_train, self._y_train)
+        self._model.fit(self._X_train, self._y_train, validation_data=(self._X_val, self._y_val))
         
 
     def _evaluate(self) -> None:
@@ -113,7 +109,7 @@ class Pipeline:
 
         self._evaluate()
         test_metrics_results = self._metrics_results
-        test_predictions = self._predictions
+        # test_predictions = self._predictions
 
         original_X_test_X, original_y_test = self._X_test, self._y_test
         # the part of the dataset that was used for training is now tested
@@ -125,6 +121,6 @@ class Pipeline:
 
         return {
             "train_metrics": train_metrics_results,
-            "test_metrics": test_metrics_results,
-            "predictions": test_predictions
+            "test_metrics": test_metrics_results
+            #"predictions": test_predictions
         }

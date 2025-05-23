@@ -1,7 +1,8 @@
-from models.model import Model
+from project_name.models.model import Model
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers
+from tensorflow import keras
+from keras import layers
 from typing import Tuple
 
 class KerasSequentialClassifier(Model):
@@ -17,7 +18,7 @@ class KerasSequentialClassifier(Model):
         _parameters (dict): Dictionary holding hyperparameters and internal config
     """
 
-    def __init__(self, input_shape: int, num_classes: int = 3, *args, **kwargs) -> None:
+    def __init__(self, num_classes: int = 3, *args, **kwargs) -> None:
         """
         Initializes a Keras Sequential model for classification.
 
@@ -28,8 +29,20 @@ class KerasSequentialClassifier(Model):
         super().__init__()
         self._type = "classification"
 
+        self._num_classes = num_classes
+        
+        self._parameters = {
+            #"input_shape": input_shape,
+            "num_classes": num_classes,
+            "optimizer": "adam",
+            "loss": "sparse_categorical_crossentropy",
+            "metrics": ["accuracy"]
+        }
+
+    def fit(self, X: np.ndarray, y: np.ndarray,
+            validation_data=None, epochs: int = 50, batch_size: int = 32) -> None:
         self._model = tf.keras.Sequential([
-            layers.Input(shape=(input_shape,)),
+            layers.Input(shape=(X.shape[1],)),
             layers.Dense(128),
             layers.BatchNormalization(),
             layers.Activation('relu'),
@@ -38,25 +51,16 @@ class KerasSequentialClassifier(Model):
             layers.BatchNormalization(),
             layers.Activation('relu'),
             layers.Dropout(0.3),
-            layers.Dense(num_classes, activation='softmax')
+            layers.Dense(self._num_classes, activation='softmax')
         ])
-
+        
         self._model.compile(
             loss='sparse_categorical_crossentropy',
             optimizer='adam',
             metrics=['accuracy']
         )
 
-        self._parameters = {
-            "input_shape": input_shape,
-            "num_classes": num_classes,
-            "optimizer": "adam",
-            "loss": "sparse_categorical_crossentropy",
-            "metrics": ["accuracy"]
-        }
-
-    def fit(self, X: np.ndarray, y: np.ndarray,
-            validation_data=None, epochs: int = 100, batch_size: int = 32) -> None:
+        
         """
         Trains the Keras Sequential model.
 

@@ -1,6 +1,6 @@
-from models.model import Model
+from project_name.models.model import Model
 import numpy as np
-from sklearn.tree import LogisticRegression as LogReg
+from sklearn.linear_model import LogisticRegression as LogReg
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from typing import Tuple
 
@@ -77,9 +77,9 @@ class LogisticRegressionClassifier(Model):
             "n_iter": self._model.n_iter_,
             "feature_names_in": getattr(self._model, "feature_names_in_", None)}})
 
-
+    """
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """
+        
         Predict method: predicts the class labels for each observation
 
         Arguments:
@@ -88,9 +88,11 @@ class LogisticRegressionClassifier(Model):
 
         Returns:
             a numpy array of predicted class labels
-        """
+        
         return self._model.predict(X)
-    def evaluate(self, X: np.ndarray, y: np.ndarray, y_pred: np.ndarray = None) -> Tuple[int, str, np.ndarray]:
+    """
+    
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> Tuple[int, str, np.ndarray]:
         """
         Evaluates the model and prints accuracy, classification report, and confusion matrix.
 
@@ -98,6 +100,8 @@ class LogisticRegressionClassifier(Model):
             y: A 1D array of true labels
             y_pred: Optional precomputed predictions. If None, predictions will be computed.
         """
+        y_pred = self._model.predict(X)
+        
         y = np.asarray(y)
 
         accuracy = accuracy_score(y, y_pred)
