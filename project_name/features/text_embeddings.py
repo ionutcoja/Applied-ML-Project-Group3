@@ -53,7 +53,7 @@ def embedding_words(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.Da
     X_val   = get_embeddings(df_val, spanish_model, spanish_tokenizer, eng_model)
     X_test  = get_embeddings(df_test, spanish_model, spanish_tokenizer, eng_model)
     
-    print(X_train[0])  
-    print(X_test[0])    
+    #print(X_train[0])  
+    #print(X_test[0])    
 
     return np.array(X_train, dtype=np.float32), np.array(X_val, dtype=np.float32), np.array(X_test, dtype=np.float32)
