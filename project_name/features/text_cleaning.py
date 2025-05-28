@@ -14,7 +14,7 @@ import torch
 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-from tensorflow.keras import layers
+from keras import layers
 import tensorflow as tf
 
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
