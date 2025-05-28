@@ -4,6 +4,9 @@ import tensorflow as tf
 from tensorflow import keras
 from keras import layers
 from typing import Tuple
+import tensorflow as tf
+from tensorflow.keras import layers, regularizers
+
 
 class KerasSequentialClassifier(Model):
     """
@@ -43,14 +46,22 @@ class KerasSequentialClassifier(Model):
             validation_data=None, epochs: int = 50, batch_size: int = 32) -> None:
         self._model = tf.keras.Sequential([
             layers.Input(shape=(X.shape[1],)),
-            layers.Dense(128),
+
+            layers.Dense(512, kernel_regularizer=regularizers.l2(0.001)),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            layers.Dropout(0.5),
+
+            layers.Dense(256, kernel_regularizer=regularizers.l2(0.001)),
             layers.BatchNormalization(),
             layers.Activation('relu'),
             layers.Dropout(0.4),
-            layers.Dense(64),
+
+            layers.Dense(128, kernel_regularizer=regularizers.l2(0.001)),
             layers.BatchNormalization(),
             layers.Activation('relu'),
             layers.Dropout(0.3),
+
             layers.Dense(self._num_classes, activation='softmax')
         ])
         
