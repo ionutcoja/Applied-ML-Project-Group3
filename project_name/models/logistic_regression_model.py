@@ -49,7 +49,7 @@ class LogisticRegressionClassifier(Model):
             "hyperparameters": self._model.get_params()
         }
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray, validation_data = None) -> None:
         """
         Fit method: fits the model
         to the provided observations and ground truth
@@ -109,5 +109,3 @@ class LogisticRegressionClassifier(Model):
         confusion_mtrx =  confusion_matrix(y, y_pred)
         
         return accuracy, classification_rep, confusion_mtrx
-        
-        

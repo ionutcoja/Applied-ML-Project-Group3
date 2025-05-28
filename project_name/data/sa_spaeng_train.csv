@@ -6106,8 +6106,8 @@ idx,words,lid,sa
 1754,['@javiidiaz06' 'eres' 'tan' 'mean' 'conmigo' '.' 'Te' 'odio' '.'],['other' 'lang2' 'lang2' 'lang1' 'lang2' 'other' 'lang2' 'lang2' 'other'],neutral
 1755,"['Better' 'off' 'alone' ',' 'estoy' 'convencida' 'de' 'eso']",['lang1' 'lang1' 'lang1' 'other' 'lang2' 'lang2' 'lang2' 'lang2'],negative
 1756,"['@CastroJohn008' 'Tan' 'rebelde' 'que' 'hasta' 'salí' 'en' 'la' 'serie'
- 'de' 'Rebelde' 'y' 'to' ""'"" '.']","['other' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2'
- 'lang2' 'lang2' 'lang2' 'lang1' 'other' 'other']",positive
+ 'de' 'Rebelde' 'y' 'to' '.']","['other' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2'
+ 'lang2' 'lang2' 'lang2' 'lang1' 'other']",positive
 1757,"['Muere' '1' 'y' 'millones' 'se' 'lamentan' ',' 'Mueren' 'millones' 'a'
  'diario' 'y' 'quien' 'se' 'lamenta' '?' '#realitycheck']","['lang2' 'other' 'lang2' 'lang2' 'lang2' 'lang2' 'other' 'lang2' 'lang2'
  'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'lang2' 'other' 'lang1']",positive
@@ -22887,10 +22887,9 @@ idx,words,lid,sa
  'lang1' 'lang2' 'ne' 'lang1' 'lang2']",positive
 7102,['gunna' 'pack' 'a' 'bowl' 'of' 'daank' 'rn' '#grifomelarifo'],['lang1' 'lang1' 'lang1' 'lang1' 'lang1' 'lang1' 'lang1' 'lang2'],positive
 7103,"['Scapegoat' ':' 'Chivo' 'Expiatorio' 'They' 'made' 'Tom' 'the'
- 'scapegoat' 'for' 'the' 'whole' 'affair' '.' 'It' 'was' ""n't"" 'all' 'his'
+ 'scapegoat' 'for' 'the' 'whole' 'affair' '.' 'It' 'was' 'not' 'all' 'his'
  'fault' '.']","['lang1' 'other' 'lang2' 'ne' 'lang1' 'lang1' 'ne' 'lang1' 'lang1' 'lang1'
- 'lang1' 'lang1' 'lang1' 'other' 'lang1' 'lang1' 'lang1' 'lang1' 'lang1'
- 'lang1' 'other']",positive
+ 'lang1' 'lang1' 'lang1' 'other' 'lang1' 'lang1' 'lang1' 'lang1' 'lang1' 'lang1' 'other']",positive
 7104,"['@Milyl15' 'quiero' 'ver' 'lol' ',' 'the' 'old' 'ones' 'not' 'so' 'much'
  'haha']","['other' 'lang2' 'lang2' 'lang1' 'other' 'lang1' 'lang1' 'lang1' 'lang1'
  'lang1' 'lang1' 'lang1']",positive

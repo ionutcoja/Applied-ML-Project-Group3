@@ -109,8 +109,8 @@ class KerasSequentialClassifier(Model):
         Returns:
             A tuple (loss, accuracy)
         """
-        X = np.asarray(X)
-        y = np.asarray(y)
-
+        X = np.asarray(X).astype(np.float32)
+        y = np.asarray(y).astype(np.int32)
+        
         loss, accuracy = self._model.evaluate(X, y, verbose=0)
         return loss, accuracy

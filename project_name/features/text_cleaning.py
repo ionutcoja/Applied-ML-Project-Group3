@@ -26,49 +26,81 @@ from sentence_transformers import SentenceTransformer
 from transformers import BertTokenizer, BertModel
 
 
-# remove words that contain @ or are RT - reply tweet
-def remove_at_words(words):
-    return [w for w in words if not (w.startswith("@") or w == "RT")]
-
-# normalize letters so they don t have accents
 def remove_accents(text):
     normalized = unicodedata.normalize('NFKD', text)
-    return ''.join([c for c in normalized if not unicodedata.combining(c)])
+    return ''.join(c for c in normalized if not unicodedata.combining(c))
 
-# remove links
-def remove_links(words):
-    return [w for w in words if not w.startswith("http")]
+def remove_at_words(words, labels):
+    filtered = [(w, l) for w, l in zip(words, labels) if not (w.startswith("@") or w == "RT")]
+    return zip(*filtered) if filtered else ([], [])
 
-def normalize_limited_repeats(word):
-    return re.sub(r'(.)\1{2,}', r'\1\1', word)
+def remove_links(words, labels):
+    filtered = [(w, l) for w, l in zip(words, labels) if not w.startswith("http")]
+    return zip(*filtered) if filtered else ([], [])
 
-# normalize multiple characters (like hiiii)
-def parse_words(entry):
+def fix_and_parse_list_like_string(s):
+    # Remove leading/trailing brackets if they exist
+    s = s.strip()
+    if s.startswith("[") and s.endswith("]"):
+        s = s[1:-1].strip()
+
+    # This regex finds quoted words (single or double quoted)
+    # e.g. 'After' or "'m" or "hello"
+    quoted_words = re.findall(r"""(['"])(.+?)\1""", s)
+
+    # Extract only the inner text
+    words = [match[1] for match in quoted_words]
+
+    return words
+
+def fix_label_string(s):
+    return re.sub(r"'\s+'", "', '", s.strip())
+
+def parse_words_and_labels(entry, label_str):
     if isinstance(entry, str) and entry.strip():
-        # remove those chars from the words
-        entry = re.sub(r"#^\[|\]$", "", entry)
-        entry = entry.replace('"', '')
+        try:
+            # Fix input string by adding commas between quoted words
+            words = fix_and_parse_list_like_string(entry)
 
-        entry = remove_accents(entry)
+            # Clean and extract labels
+            #label_str = label_str.replace("'", "")
+            #labels = re.findall(r'(other|lang1|lang2|lang3)', label_str)
 
-        # Use regex to extract text between single quotes
-        words = re.findall(r"'(.*?)'", entry)
+            labels = fix_and_parse_list_like_string(label_str)
 
-        words = remove_at_words(words)
-        words = remove_links(words)
+            if len(words) != len(labels):
+                print("Mismatch:")
+                print("Words:", words)
+                print("Labels:", labels)
+                raise ValueError(f"Length mismatch: {len(words)} words vs {len(labels)} labels")
 
-        # make all words lowercase
-        words = [word.lower() for word in words if word not in string.punctuation]
-        return words
-    return []
+            # Remove accents
+            words = [remove_accents(w) for w in words]
+            labels = [remove_accents(l) for l in labels]
+
+            # Remove @user, RT, links
+            words, labels = remove_at_words(words, labels)
+            words, labels = remove_links(words, labels)
+
+            return [w.lower() for w in words], labels
+        except Exception as e:
+            raise ValueError(f"Failed to parse:\n{entry}\n{label_str}\nError: {e}")
+    return [], []
 
 
 def parse_words_dataset(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame):
     # STEP 4a: Parse words for the NN model
     for df in [df_train, df_val, df_test]:
-        df['parsed_words'] = df['words'].apply(parse_words)
-        df['joined_text'] = df['parsed_words'].apply(lambda words: ' '.join(words))
-
+        new_words = []
+        new_lids = []
+        for entry, lid in zip(df['words'], df['lid']):
+            words, labels = parse_words_and_labels(entry, lid)
+            new_words.append(words)
+            new_lids.append(labels)
+        df['words'] = new_words
+        df['lid'] = new_lids
+        
+        df['joined_text'] = df['words'].apply(lambda words: ' '.join(words))
     # STEP 4b: Parse and combine words with language for the other models
     '''for df in [df_train, df_val, df_test]:
         df['parsed_words'] = df['words'].apply(parse_words)

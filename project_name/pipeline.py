@@ -29,7 +29,7 @@ from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
 
 from project_name.models.model import Model
-
+from project_name.models.tf_keras_sequential_model import KerasSequentialClassifier
 
 class Pipeline:
     """
@@ -74,15 +74,18 @@ class Pipeline:
         self._y_val   = self._y_val.map(label_mapping)
         self._y_test  = self._y_test.map(label_mapping)
 
-        
+        self._y_train = np.asarray(self._y_train).astype(np.int32)
+        self._y_val   = np.asarray(self._y_val).astype(np.int32)
+        self._y_test  = np.asarray(self._y_test).astype(np.int32)
         
     def _train(self) -> None:
         """
         Trains the model using the training dataset after compacting the
         input vectors.
         """
-
-        self._model.fit(self._X_train, self._y_train, validation_data=(self._X_val, self._y_val))
+        val_data = (self._X_val, self._y_val) if isinstance(self._model, KerasSequentialClassifier) else None
+        
+        self._model.fit(self._X_train, self._y_train, val_data)
         
 
     def _evaluate(self) -> None:
