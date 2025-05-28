@@ -61,7 +61,6 @@ class XGBoostClassifier(Model):
         self._model.fit(
             X, y,
             eval_set=eval_set,
-            early_stopping_rounds=10,
             verbose=True
         )
 

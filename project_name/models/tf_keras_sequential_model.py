@@ -47,17 +47,21 @@ class KerasSequentialClassifier(Model):
         self._model = tf.keras.Sequential([
             layers.Input(shape=(X.shape[1],)),
 
-            layers.Dense(512, kernel_regularizer=regularizers.l2(0.001)),
+            # layers.Dense(512, kernel_regularizer=regularizers.l2(0.001)),
+            # layers.BatchNormalization(),
+            # layers.Activation('relu'),
+            # layers.Dropout(0.5),
+            #
+            # layers.Dense(256, kernel_regularizer=regularizers.l2(0.001)),
+            # layers.BatchNormalization(),
+            # layers.Activation('relu'),
+            # layers.Dropout(0.4),
+            layers.Dense(64, kernel_regularizer=regularizers.l2(0.001)),
             layers.BatchNormalization(),
             layers.Activation('relu'),
-            layers.Dropout(0.5),
+            layers.Dropout(0.3),
 
-            layers.Dense(256, kernel_regularizer=regularizers.l2(0.001)),
-            layers.BatchNormalization(),
-            layers.Activation('relu'),
-            layers.Dropout(0.4),
-
-            layers.Dense(128, kernel_regularizer=regularizers.l2(0.001)),
+            layers.Dense(32, kernel_regularizer=regularizers.l2(0.001)),
             layers.BatchNormalization(),
             layers.Activation('relu'),
             layers.Dropout(0.3),
