@@ -44,6 +44,7 @@ def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, bat
 
     return np.array(embeddings)
 
+
 def embedding_words(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame):
     # STEP 5: Sentence Embedding with multilingual model suitable for code-switching
     # model = SentenceTransformer('sentence-transformers/LaBSE')
@@ -54,6 +55,5 @@ def embedding_words(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.Da
     
     print(X_train[0])  
     print(X_test[0])    
-      
-    
+
     return np.array(X_train, dtype=np.float32), np.array(X_val, dtype=np.float32), np.array(X_test, dtype=np.float32)
