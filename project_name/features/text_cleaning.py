@@ -88,19 +88,18 @@ def parse_words_and_labels(entry, label_str):
     return [], []
 
 
-def parse_words_dataset(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame):
+def parse_words_dataset(df: pd.DataFrame):
     # STEP 4a: Parse words for the NN model
-    for df in [df_train, df_val, df_test]:
-        new_words = []
-        new_lids = []
-        for entry, lid in zip(df['words'], df['lid']):
-            words, labels = parse_words_and_labels(entry, lid)
-            new_words.append(words)
-            new_lids.append(labels)
-        df['words'] = new_words
-        df['lid'] = new_lids
-        
-        df['joined_text'] = df['words'].apply(lambda words: ' '.join(words))
+    new_words = []
+    new_lids = []
+    for entry, lid in zip(df['words'], df['lid']):
+        words, labels = parse_words_and_labels(entry, lid)
+        new_words.append(words)
+        new_lids.append(labels)
+    df['words'] = new_words
+    df['lid'] = new_lids
+
+    df['joined_text'] = df['words'].apply(lambda words: ' '.join(words))
     # STEP 4b: Parse and combine words with language for the other models
     '''for df in [df_train, df_val, df_test]:
         df['parsed_words'] = df['words'].apply(parse_words)

@@ -77,20 +77,11 @@ class LogisticRegressionClassifier(Model):
             "n_iter": self._model.n_iter_,
             "feature_names_in": getattr(self._model, "feature_names_in_", None)}})
 
-    """
+
     def predict(self, X: np.ndarray) -> np.ndarray:
         
-        Predict method: predicts the class labels for each observation
-
-        Arguments:
-            X: a 2D array with each row containing
-            features for new observations
-
-        Returns:
-            a numpy array of predicted class labels
-        
         return self._model.predict(X)
-    """
+
     
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> Tuple[int, str, np.ndarray]:
         """

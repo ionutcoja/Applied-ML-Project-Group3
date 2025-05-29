@@ -45,12 +45,10 @@ def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, bat
     return np.array(embeddings)
 
 
-def embedding_words(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame):
+def embedding_words(df: pd.DataFrame):
     # STEP 5: Sentence Embedding with multilingual model suitable for code-switching
     # model = SentenceTransformer('sentence-transformers/LaBSE')
 
-    X_train = get_embeddings(df_train, spanish_model, spanish_tokenizer, eng_model)
-    X_val   = get_embeddings(df_val, spanish_model, spanish_tokenizer, eng_model)
-    X_test  = get_embeddings(df_test, spanish_model, spanish_tokenizer, eng_model)
+    X = get_embeddings(df, spanish_model, spanish_tokenizer, eng_model)
 
-    return np.array(X_train, dtype=np.float32), np.array(X_val, dtype=np.float32), np.array(X_test, dtype=np.float32)
+    return np.array(X, dtype=np.float32)
