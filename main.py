@@ -1,39 +1,11 @@
 
 import pandas as pd
-import re
-import ast
-import string
-from sklearn.decomposition import PCA
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn import svm
-import matplotlib.pyplot as plt
 import numpy as np
-import unicodedata
-import torch
-
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
-
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
-
-# libraries for embeddings
-from sentence_transformers import SentenceTransformer
-from transformers import BertTokenizer, BertModel
-
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
-
-from project_name.models.model import Model
-from project_name.models.tf_keras_sequential_model import KerasSequentialClassifier
-
-from project_name.models.gru_model import KerasBiGRUClassifier
 from project_name.models.xgb_model import XGBoostClassifier
 from project_name.models.logistic_regression_model import LogisticRegressionClassifier
-from project_name.models.tf_keras_sequential_model import KerasSequentialClassifier
-
-import pandas as pd
 
 
 def split_data(dataset: pd.DataFrame) -> None:
@@ -81,6 +53,16 @@ def train(model, X_train, y_train, X_val, y_val) -> None:
     model.fit(X_train, y_train, val_data)
         
 
+def predict(model, X_test):
+    """
+    Predicts the labels for the test dataset using the trained model.
+    """
+    
+    predictions = model.predict(X_test)
+    
+    return predictions
+
+
 def evaluate(model, X_test, y_test) -> None:
     """
     Evaluates the model using the test dataset, calculating metrics
@@ -119,4 +101,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
