@@ -51,8 +51,9 @@ def train(model, X_train, y_train, X_val, y_val):
     """
     val_data = (X_val, y_val) if isinstance(model, XGBoostClassifier) else None
 
-    model.fit(X_train, y_train, val_data)
-    return model #possibly working
+    fitted_model = model.fit(X_train, y_train, val_data)
+    print(fitted_model)
+    return fitted_model #possibly working
 
 
 def predict(model, X_test):
