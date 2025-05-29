@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -24,24 +23,18 @@ def split_data(dataset: pd.DataFrame) -> None:
     return dataset_train, dataset_test
 
 
-def preprocess_features(dataset_train: pd.DataFrame, dataset_val: pd.DataFrame, dataset_test: pd.DataFrame) -> None:
-    parse_words_dataset(dataset_train, dataset_val, dataset_test)
-    X_train, X_val, X_test = embedding_words(dataset_train, dataset_val, dataset_test)
+def preprocess_features(dataset: pd.DataFrame) -> None:
+    parse_words_dataset(dataset)
+    X = embedding_words(dataset)
 
-    y_train = dataset_train['sa']
-    y_val   = dataset_val['sa']
-    y_test  = dataset_test['sa']
+    y = dataset['sa']
 
     label_mapping = {'positive': 2, 'neutral': 1, 'negative': 0}
-    y_train = y_train.map(label_mapping)
-    y_val   = y_val.map(label_mapping)
-    y_test  = y_test.map(label_mapping)
+    y = y.map(label_mapping)
 
-    y_train = np.asarray(y_train).astype(np.int32)
-    y_val   = np.asarray(y_val).astype(np.int32)
-    y_test  = np.asarray(y_test).astype(np.int32)
+    y = np.asarray(y).astype(np.int32)
 
-    return X_train, y_train, X_val, y_val, X_test, y_test
+    return X, y
 
 
 def train(model, X_train, y_train, X_val, y_val):
@@ -51,9 +44,7 @@ def train(model, X_train, y_train, X_val, y_val):
     """
     val_data = (X_val, y_val) if isinstance(model, XGBoostClassifier) else None
 
-    fitted_model = model.fit(X_train, y_train, val_data)
-    print(fitted_model)
-    return fitted_model #possibly working
+    model.fit(X_train, y_train, val_data)
 
 
 def predict(model, X_test):
@@ -62,7 +53,7 @@ def predict(model, X_test):
     """
 
     predictions = model.predict(X_test)
-
+    print(predictions)
     return predictions
 
 
@@ -79,18 +70,24 @@ def evaluate(model, X_test, y_test) -> None:
 def main():
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
     dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
+    # dataset_test_api = pd.read_csv('project_name/data/sa_spaeng_test_api.csv')
 
     baseline_model = LogisticRegressionClassifier()
     advanced_model = XGBoostClassifier()
 
     dataset_train, dataset_test = split_data(dataset=dataset_train)
-    X_train, y_train, X_val, y_val, X_test, y_test =  preprocess_features(dataset_train, dataset_val, dataset_test)
 
-    trained_baseline_model = train(baseline_model, X_train, y_train, X_val, y_val)
-    trained_advanced_model = train(advanced_model, X_train, y_train, X_val, y_val)
+    X_train, y_train = preprocess_features(dataset_train)
+    X_val, y_val = preprocess_features(dataset_val)
+    X_test, y_test = preprocess_features(dataset_test)
+    # X_test_api, y_test_api = preprocess_features(dataset_test_api)
 
-    joblib.dump(trained_baseline_model, "logreg_model.joblib")  # Save the model
-    joblib.dump(trained_advanced_model, "neural_network_model.joblib")  # Save the model
+    train(baseline_model, X_train, y_train, X_val, y_val)
+    train(advanced_model, X_train, y_train, X_val, y_val)
+
+    # Save models
+    joblib.dump(baseline_model, "logreg_model.joblib")
+    joblib.dump(advanced_model, "advanced_model.joblib")
 
     metrics_results_training = evaluate(baseline_model, X_train, y_train)
     print("Baseline Model Metrics Training:", metrics_results_training)
@@ -107,35 +104,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-'''
-from project_name.pipeline import Pipeline
-from project_name.models.logistic_regression_model import LogisticRegressionClassifier
-from project_name.models.tf_keras_sequential_model import KerasSequentialClassifier
-
-import pandas as pd
-import joblib  # For saving sklearn models
-
-# Load datasets
-dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
-
-# Train Logistic Regression model
-pipeline_log_reg = Pipeline(dataset_train, dataset_val, model=LogisticRegressionClassifier())
-logreg_results = pipeline_log_reg.execute()
-joblib.dump(pipeline_log_reg._model, "logreg_model.joblib")  # Save the model
-
-# Train Keras Sequential model
-pipeline_tf_keras = Pipeline(dataset_train, dataset_val, model=KerasSequentialClassifier())
-keras_results = pipeline_tf_keras.execute()
-pipeline_tf_keras._model.save("keras_model.h5")  # Save the Keras model
-
-# Print results
-print("Logistic Regression Metrics:", logreg_results)
-print("Keras Sequential Metrics:", keras_results)
-
-if __name__ == "__main__":
-    main()
-
-'''
