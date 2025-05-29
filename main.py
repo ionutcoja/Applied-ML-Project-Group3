@@ -46,7 +46,6 @@ def train(model, X_train, y_train, X_val, y_val):
     val_data = (X_val, y_val) if isinstance(model, XGBoostClassifier) else None
 
     model.fit(X_train, y_train, val_data)
-    return model #possibly working
 
 
 def predict(model, X_test):
@@ -55,7 +54,7 @@ def predict(model, X_test):
     """
 
     predictions = model.predict(X_test)
-
+    print(predictions)
     return predictions
 
 
@@ -87,6 +86,10 @@ def main():
     train(baseline_model, X_train, y_train, X_val, y_val)
     train(advanced_model, X_train, y_train, X_val, y_val)
 
+    # Save models
+    joblib.dump(baseline_model, "logreg_model.joblib")
+    joblib.dump(advanced_model, "advanced_model.joblib")
+
     metrics_results_training = evaluate(baseline_model, X_train, y_train)
     print("Baseline Model Metrics Training:", metrics_results_training)
 
@@ -102,35 +105,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-'''
-from project_name.pipeline import Pipeline
-from project_name.models.logistic_regression_model import LogisticRegressionClassifier
-from project_name.models.tf_keras_sequential_model import KerasSequentialClassifier
-
-import pandas as pd
-import joblib  # For saving sklearn models
-
-# Load datasets
-dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
-
-# Train Logistic Regression model
-pipeline_log_reg = Pipeline(dataset_train, dataset_val, model=LogisticRegressionClassifier())
-logreg_results = pipeline_log_reg.execute()
-joblib.dump(pipeline_log_reg._model, "logreg_model.joblib")  # Save the model
-
-# Train Keras Sequential model
-pipeline_tf_keras = Pipeline(dataset_train, dataset_val, model=KerasSequentialClassifier())
-keras_results = pipeline_tf_keras.execute()
-pipeline_tf_keras._model.save("keras_model.h5")  # Save the Keras model
-
-# Print results
-print("Logistic Regression Metrics:", logreg_results)
-print("Keras Sequential Metrics:", keras_results)
-
-if __name__ == "__main__":
-    main()
-
-'''

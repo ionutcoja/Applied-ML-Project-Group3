@@ -16,7 +16,7 @@ class InputData(BaseModel):
 
 
 # Load trained model once
-model = joblib.load("logreg_model.joblib")
+model = joblib.load("advanced_model.joblib")
 
 
 @app.get("/")
@@ -36,15 +36,15 @@ def predict(data: InputData):
         }])
 
         # Preprocess and embed
-        parse_words_dataset(df, df, df)
+        parse_words_dataset(df)
         # X, _, _ = embedding_words(df, df, df)
 
-        result = embedding_words(df, df, df)
+        result = embedding_words(df)
         print("embedding_words result:", result)
-        X, _, _ = result
+        X = result
 
         # Predict
-        print(os.path.isfile("logreg_model.joblib"))
+        print(os.path.isfile("advanced_model.joblib"))
         pred = model.predict(X)
         label_mapping = {2: 'positive', 1: 'neutral', 0: 'negative'}
         return {"prediction": label_mapping[int(pred[0])]}
