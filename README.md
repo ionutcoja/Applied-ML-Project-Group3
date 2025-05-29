@@ -31,7 +31,7 @@ uvicorn api_main:app --reload
 Once the API is running, open your browser and go to:
 
 ```
-http://127.0.0.1:8000
+http://127.0.0.1:8000/docs
 ```
 ### 5. Send a Prediction Request
 
@@ -41,6 +41,15 @@ You can test the API using a curl command. In the same terminal where you ran ma
 curl -X POST "http://127.0.0.1:8000/predict" \
   -H "Content-Type: application/json" \
   -d '{"words": "[\"triste\", \"world\"]", "lid": "[\"lang2\", \"lang1\"]"}'
+```
+
+The API can also be tested through the app itself, using input of the format>
+
+```
+{
+  "words": "[\"triste\", \"child\", \"esta\", \"crying\"]", 
+  "lid": "[\"lang2\", \"lang1\", \"lang2\", \"lang1\"]"
+}
 ```
 
 ### Troubleshooting
