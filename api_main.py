@@ -4,7 +4,6 @@ import pandas as pd
 import joblib
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
-import os
 
 app = FastAPI()
 
