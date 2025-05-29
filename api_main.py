@@ -9,8 +9,8 @@ app = FastAPI()
 
 # Define input schema
 class InputData(BaseModel):
-    words: str  # stringified list: "['hello', 'world']"
-    lid: str    # stringified list: "['lang1', 'lang1']"
+    words: str  # stringified list: "['hello', 'world']" --> change to list of strings
+    lid: str    # stringified list: "['lang1', 'lang1']" --> same
 
 # Load trained model once
 model = joblib.load("logreg_model.joblib")
