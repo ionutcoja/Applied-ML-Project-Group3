@@ -64,10 +64,8 @@ class LogisticRegressionClassifier(Model):
             None
         """
         X = np.asarray(X)
-
         self._model.fit(X, y)
 
-        # Add model parameters to _parameters
         self._parameters.update({
             "strict parameters": {
             "classes": self._model.classes_,
@@ -92,7 +90,6 @@ class LogisticRegressionClassifier(Model):
             y_pred: Optional precomputed predictions. If None, predictions will be computed.
         """
         y_pred = self._model.predict(X)
-        
         y = np.asarray(y)
 
         accuracy = accuracy_score(y, y_pred)

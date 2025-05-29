@@ -8,14 +8,10 @@ import os
 
 app = FastAPI()
 
-
-# Define input schema
 class InputData(BaseModel):
-    words: str  # stringified list: "['hello', 'world']"
-    lid: str  # stringified list: "['lang1', 'lang1']"
+    words: str  #this is a stringified list: "['sad', 'papi]"
+    lid: str  #this is a stringified list: "['lang1', 'lang2']"
 
-
-# Load trained model once
 model = joblib.load("advanced_model.joblib")
 
 
@@ -27,24 +23,17 @@ def root():
 @app.post("/predict")
 def predict(data: InputData):
     try:
-        # Create a dataframe from input
         df = pd.DataFrame([{
-            "joined_text": "",  # will be overwritten by parse_words_dataset
-            "sa": "neutral",  # dummy label
+            "joined_text": "",
+            "sa": "neutral",
             "words": data.words,
             "lid": data.lid
         }])
 
-        # Preprocess and embed
         parse_words_dataset(df)
-        # X, _, _ = embedding_words(df, df, df)
-
         result = embedding_words(df)
-        print("embedding_words result:", result)
         X = result
 
-        # Predict
-        print(os.path.isfile("advanced_model.joblib"))
         pred = model.predict(X)
         label_mapping = {2: 'positive', 1: 'neutral', 0: 'negative'}
         return {"prediction": label_mapping[int(pred[0])]}

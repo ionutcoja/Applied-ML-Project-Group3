@@ -17,7 +17,7 @@ def split_data(dataset: pd.DataFrame) -> None:
         dataset,
         test_size=0.2,
         random_state=42,
-        stratify=dataset['sa']  # Keeps class distribution
+        stratify=dataset['sa']
     )
 
     return dataset_train, dataset_test
@@ -53,7 +53,6 @@ def predict(model, X_test):
     """
 
     predictions = model.predict(X_test)
-    print(predictions)
     return predictions
 
 
@@ -70,36 +69,33 @@ def evaluate(model, X_test, y_test) -> None:
 def main():
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
     dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
-    # dataset_test_api = pd.read_csv('project_name/data/sa_spaeng_test_api.csv')
 
     baseline_model = LogisticRegressionClassifier()
     advanced_model = XGBoostClassifier()
 
-    dataset_train, dataset_test = split_data(dataset=dataset_train)
+    dataset_train, dataset_test = split_data(dataset_train)
 
     X_train, y_train = preprocess_features(dataset_train)
     X_val, y_val = preprocess_features(dataset_val)
     X_test, y_test = preprocess_features(dataset_test)
-    # X_test_api, y_test_api = preprocess_features(dataset_test_api)
 
     train(baseline_model, X_train, y_train, X_val, y_val)
     train(advanced_model, X_train, y_train, X_val, y_val)
 
-    # Save models
     joblib.dump(baseline_model, "logreg_model.joblib")
     joblib.dump(advanced_model, "advanced_model.joblib")
 
     metrics_results_training = evaluate(baseline_model, X_train, y_train)
-    print("Baseline Model Metrics Training:", metrics_results_training)
+    print("Baseline Model Training:", metrics_results_training)
 
     metrics_results_test = evaluate(baseline_model, X_test, y_test)
-    print("Baseline Model Metrics Test:", metrics_results_test)
+    print("Baseline Model Test:", metrics_results_test)
 
     metrics_results_training = evaluate(advanced_model, X_train, y_train)
-    print("Advanced Model Metrics Training:", metrics_results_training)
+    print("Advanced Model Training:", metrics_results_training)
 
     metrics_results_test = evaluate(advanced_model, X_test, y_test)
-    print("Advanced Model Metrics Test:", metrics_results_test)
+    print("Advanced Model Test:", metrics_results_test)
 
 
 if __name__ == "__main__":
