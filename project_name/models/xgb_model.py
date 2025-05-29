@@ -80,7 +80,7 @@ class XGBoostClassifier(Model):
         probs = self._model.predict_proba(X)
         return np.argmax(probs, axis=1)
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> Tuple[float, float]:
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> dict[float, float]:
         """
         Evaluates the model using accuracy and log loss.
 
@@ -99,4 +99,4 @@ class XGBoostClassifier(Model):
         loss = log_loss(y, probs)
         acc = accuracy_score(y, preds)
 
-        return loss, acc
+        return {"loss": loss, "accuracy": acc}
