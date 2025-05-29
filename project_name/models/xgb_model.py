@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, log_loss
 
 class XGBoostClassifier(Model):
     """
-    XGBoostClassifier class: wraps an XGBoost classifier using the same structure as KerasSequentialClassifier.
+    XGBoostClassifier class: wraps an XGBoost classifier
 
     Attributes:
         _type (str): The type of model ("classification")
@@ -21,7 +21,7 @@ class XGBoostClassifier(Model):
         self._num_classes = num_classes
 
         self._model = xgb.XGBClassifier(
-            n_estimators=200,
+            n_estimators=200, # equivalent for number of training epochs
             max_depth=6,
             learning_rate=0.05,
             subsample=0.8,
@@ -40,9 +40,9 @@ class XGBoostClassifier(Model):
             "eval_metric": "mlogloss"
         }
 
+
     def fit(self, X: np.ndarray, y: np.ndarray,
-            validation_data: Tuple[np.ndarray, np.ndarray] = None,
-            epochs: int = None, batch_size: int = None) -> None:
+            validation_data: Tuple[np.ndarray, np.ndarray] = None) -> None:
         """
         Trains the XGBoost model.
 
@@ -66,26 +66,28 @@ class XGBoostClassifier(Model):
 
         self._parameters["training_history"] = self._model.evals_result()
 
+
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Predicts class labels for the input features.
 
         Args:
-            X: A 2D array of input features
+            X: A 2D array of lists of embeddings
 
         Returns:
-            A 1D array of predicted class labels
+            A 1D array of predicted sentiment labels
         """
         X = np.asarray(X)
         probs = self._model.predict_proba(X)
         return np.argmax(probs, axis=1)
+
 
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> dict[float, float]:
         """
         Evaluates the model using accuracy and log loss.
 
         Args:
-            X: A 2D array of input features
+            X: A 2D array of lists of embeddings
             y: A 1D array of true labels
 
         Returns:

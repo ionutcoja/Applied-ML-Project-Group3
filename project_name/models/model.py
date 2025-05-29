@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import numpy as np
 from copy import deepcopy
-from typing import Tuple
+from typing import Tuple, Union
 
 
 class Model():
@@ -35,6 +35,7 @@ class Model():
         Arguments:
             observations
             ground_truth
+            validation_data: optional validation data
         Returns:
                 None
             """
@@ -47,17 +48,17 @@ class Model():
         the value of the feature for each observation
 
         Arguments:
-            observations: a 2D array with each row containing
-            features for each new observation,
-            with one column containing each feature
+            observations: a 2D np.array with each row containing
+            embeddings for each new sentence,
+            with one column containing each list of embeddings
 
         Returns:
-            a list of predictions
+            a list of predictions of sentiment for each observation
         """
         pass
 
     @abstractmethod
-    def evaluate(self, observations: np.ndarray, ground_truth: np.ndarray) -> Tuple:
+    def evaluate(self, observations: np.ndarray, ground_truth: np.ndarray) -> Union[Tuple, str]:
         """
         Evaluates the model on test data.
 

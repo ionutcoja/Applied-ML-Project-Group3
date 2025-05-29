@@ -21,23 +21,23 @@ class LogisticRegressionClassifier(Model):
 
     def __init__(self, *args, **kwargs) -> None:
         """
-        Initializes a DecisionTreeClassifier model instance.
+        Initializes a Logistic Regression model instance.
 
-        This constructor initializes a Sklearn DecisionTreeClassifier model
+        This constructor initializes a Sklearn LogisticRegressionClassifier model
         and sets up the model's hyperparameters in the _parameters attribute.
         It is called with any additional arguments passed to the parent class
         initializer, allowing customization of the DecisionTreeClassifier's
         configuration.
 
         Args:
-            *args: Positional arguments passed to the DecisionTreeClassifier
+            *args: Positional arguments passed to the LogisticRegressionClassifier
             initializer.
-            **kwargs: Keyword arguments passed to the DecisionTreeClassifier
+            **kwargs: Keyword arguments passed to the LogisticRegressionClassifier
             initializer.
 
         Attributes:
             _type (str): The type of model, in this case, "classification".
-            _model (DecTreeClass): The Sklearn DecisionTreeClassifier model
+            _model (LogReg): The Sklearn DecisionTreeClassifier model
             instance, configured with the provided initialization arguments.
             _parameters (dict): A dictionary holding the hyperparameters
             of the model, initialized with the DecisionTreeClassifier's
@@ -81,19 +81,31 @@ class LogisticRegressionClassifier(Model):
         return self._model.predict(X)
 
     
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> Tuple[int, str, np.ndarray]:
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> str:
         """
-        Evaluates the model and prints accuracy, classification report, and confusion matrix.
+        Evaluates the model and returns a formatted string of metrics:
+        accuracy, classification report, and confusion matrix.
 
         Args:
-            y: A 1D array of true labels
-            y_pred: Optional precomputed predictions. If None, predictions will be computed.
+            X (np.ndarray): Feature matrix.
+            y (np.ndarray): True labels.
+
+        Returns:
+            str: A formatted string with evaluation metrics.
         """
         y_pred = self._model.predict(X)
         y = np.asarray(y)
 
         accuracy = accuracy_score(y, y_pred)
-        classification_rep =  classification_report(y, y_pred)
-        confusion_mtrx =  confusion_matrix(y, y_pred)
-        
-        return accuracy, classification_rep, confusion_mtrx
+        report = classification_report(y, y_pred)
+        matrix = confusion_matrix(y, y_pred)
+
+        formatted_metrics = (
+            f"Evaluation Metrics\n"
+            f"{'='*40}\n"
+            f"Accuracy: {accuracy:.4f}\n\n"
+            f"Classification Report:\n{report}\n"
+            f"Confusion Matrix:\n{matrix}\n"
+        )
+
+        return formatted_metrics

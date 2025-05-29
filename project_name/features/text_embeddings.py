@@ -12,11 +12,11 @@ spanish_tokenizer = AutoTokenizer.from_pretrained(spanish_model_name)
 spanish_model = AutoModel.from_pretrained(spanish_model_name)
 
 
-def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, batch_size=16):
-
+def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, batch_size=16)-> np.ndarray:
     texts = df['joined_text'].tolist()
     lids_list = df['lid'].tolist()
 
+    # If the majority of the words are in Spanish (i.e., 'lang2'), use the Spanish model; otherwise, use the multilingual model
     use_spanish = [i for i, lids in enumerate(lids_list) if lids.count('lang2') > len(lids) / 2]
     use_multilingual = [i for i in range(len(lids_list)) if i not in use_spanish]
 
@@ -42,8 +42,6 @@ def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, bat
     return np.array(embeddings)
 
 
-def embedding_words(df: pd.DataFrame):
-
+def embedding_words(df: pd.DataFrame) -> np.ndarray:
     X = get_embeddings(df, spanish_model, spanish_tokenizer, eng_model)
-
     return np.array(X, dtype=np.float32)

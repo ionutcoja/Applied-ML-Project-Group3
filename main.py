@@ -8,7 +8,7 @@ from project_name.models.logistic_regression_model import LogisticRegressionClas
 import joblib
 
 
-def split_data(dataset: pd.DataFrame) -> None:
+def split_data(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Splits a dataset into training and testing
     """
@@ -23,31 +23,30 @@ def split_data(dataset: pd.DataFrame) -> None:
     return dataset_train, dataset_test
 
 
-def preprocess_features(dataset: pd.DataFrame) -> None:
+def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     parse_words_dataset(dataset)
     X = embedding_words(dataset)
 
+    # encode the sentiment labels as integers
     y = dataset['sa']
-
     label_mapping = {'positive': 2, 'neutral': 1, 'negative': 0}
     y = y.map(label_mapping)
-
     y = np.asarray(y).astype(np.int32)
 
     return X, y
 
 
-def train(model, X_train, y_train, X_val, y_val):
+def train(model, X_train, y_train, X_val, y_val) -> None:
     """
     Trains the model using the training dataset after compacting the
     input vectors.
     """
+    # only pass validation data to the advanced model
     val_data = (X_val, y_val) if isinstance(model, XGBoostClassifier) else None
-
     model.fit(X_train, y_train, val_data)
 
 
-def predict(model, X_test):
+def predict(model, X_test) -> np.ndarray:
     """
     Predicts the labels for the test dataset using the trained model.
     """

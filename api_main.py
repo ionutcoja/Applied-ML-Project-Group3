@@ -8,7 +8,7 @@ from project_name.features.text_embeddings import embedding_words
 app = FastAPI()
 
 class InputData(BaseModel):
-    words: str  #this is a stringified list: "['sad', 'papi]"
+    words: str  #this is a stringified list: "['sad', 'mundo']"
     lid: str  #this is a stringified list: "['lang1', 'lang2']"
 
 model = joblib.load("advanced_model.joblib")

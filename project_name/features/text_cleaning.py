@@ -3,31 +3,35 @@ import re
 import unicodedata
 
 
-def remove_accents(text):
+def remove_accents(text) -> str:
     normalized = unicodedata.normalize('NFKD', text)
     return ''.join(c for c in normalized if not unicodedata.combining(c))
 
-def remove_at_words(words, labels):
+
+def remove_at_words(words, labels) -> tuple[list[str], list[str]]:
     filtered = [(w, l) for w, l in zip(words, labels) if not (w.startswith("@") or w == "RT")]
     return zip(*filtered) if filtered else ([], [])
 
-def remove_links(words, labels):
+
+def remove_links(words, labels) -> tuple[list[str], list[str]]:
     filtered = [(w, l) for w, l in zip(words, labels) if not w.startswith("http")]
     return zip(*filtered) if filtered else ([], [])
 
-def fix_and_parse_list_like_string(s):
 
+def fix_and_parse_list_like_string(s) -> list[str]:
     s = s.strip()
     if s.startswith("[") and s.endswith("]"):
         s = s[1:-1].strip()
 
+    # Extract words/labels with a regex knowing that they are between '' or ""
     quoted_words = re.findall(r"""(['"])(.+?)\1""", s)
 
+    # put all the words/labels found into a list
     words = [match[1] for match in quoted_words]
 
     return words
 
-def parse_words_and_labels(entry, label_str):
+def parse_words_and_labels(entry, label_str) -> tuple[list[str], list[str]]:
     if isinstance(entry, str) and entry.strip():
         try:
 
@@ -35,13 +39,14 @@ def parse_words_and_labels(entry, label_str):
             words = fix_and_parse_list_like_string(entry)
             labels = fix_and_parse_list_like_string(label_str)
 
-            # sanity check
+            # check whether the number of words matches the number of labels
             if len(words) != len(labels):
                 print("Mismatch:")
                 print("Words:", words)
                 print("Labels:", labels)
                 raise ValueError(f"Length mismatch: {len(words)} words vs {len(labels)} labels")
 
+            # clean the text, while keeping the words and labels in sync
             words = [remove_accents(w) for w in words]
             labels = [remove_accents(l) for l in labels]
 
@@ -55,7 +60,7 @@ def parse_words_and_labels(entry, label_str):
     return [], []
 
 
-def parse_words_dataset(df: pd.DataFrame):
+def parse_words_dataset(df: pd.DataFrame) -> None:
     # parsing words for the model
     new_words = []
     new_lids = []

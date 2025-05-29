@@ -43,7 +43,7 @@ curl -X POST "http://127.0.0.1:8000/predict" \
   -d '{"words": "[\"triste\", \"world\"]", "lid": "[\"lang2\", \"lang1\"]"}'
 ```
 
-The API can also be tested through the app itself, using input of the format>
+The API can also be tested through the app itself, using input of the format:
 
 ```
 {
@@ -68,7 +68,7 @@ The script main.py trains two models:
 
   - An advanced model (XGBoost).
 
-The API uses the advanced model by default. If you want to change which model the API uses, update line 17 of api_main.py:
+The API uses the advanced model by default. If you want to change which model the API uses, update the file passed to joblib.load on line 17 of api_main.py from 'advanced_model.joblib' to 'logreg_model.joblib':
 
 ```
 model = joblib.load("advanced_model.joblib")
