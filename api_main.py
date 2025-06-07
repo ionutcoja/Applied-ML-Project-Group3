@@ -9,7 +9,7 @@ app = FastAPI()
 
 class InputData(BaseModel):
     words: str  #this is a stringified list: "['sad', 'mundo']"
-    lid: str  #this is a stringified list: "['lang1', 'lang2']"
+    lid: str  #this is a stringified list: "['English', 'Spanish']"
 
 model = joblib.load("advanced_model.joblib")
 

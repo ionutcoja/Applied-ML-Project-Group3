@@ -12,16 +12,16 @@ To install all necessary dependencies, run:
 pip install -r requirements.txt
 ```
 
-### 2. Run the Main File
+### 2. Run the File for Training the Model
 
-Before starting the API, you must first run the main script to ensure everything is properly initialized. Let it finish before proceeding.
+Before starting the API, you must first run the script that preprocesses the features, trains the model, and saves the trained model's parameters into a joblib file. Let it finish before proceeding.
 
 ```
-python3 main.py
+python3 train_model.py
 ```
 ### 3. Start the API
 
-In a separate terminal, run:
+Afterward, in a separate terminal, run:
 
 ```
 uvicorn api_main:app --reload
@@ -40,7 +40,7 @@ You can test the API using a curl command. In the same terminal where you ran ma
 ```
 curl -X POST "http://127.0.0.1:8000/predict" \
   -H "Content-Type: application/json" \
-  -d '{"words": "[\"triste\", \"world\"]", "lid": "[\"lang2\", \"lang1\"]"}'
+  -d '{"words": "[\"triste\", \"world\"]", "lid": "[\"Spanish\", \"English\"]"}'
 ```
 
 The API can also be tested through the app itself, using input of the format:
@@ -48,8 +48,16 @@ The API can also be tested through the app itself, using input of the format:
 ```
 {
   "words": "[\"triste\", \"child\", \"esta\", \"crying\"]", 
-  "lid": "[\"lang2\", \"lang1\", \"lang2\", \"lang1\"]"
+  "lid": "[\"Spanish\", \"English\", \"Spanish\", \"English\"]"
 }
+```
+
+### 6. Inspect the performance of the models
+
+You can compare the performance of the two models by running the evaluate_models.py file, which prints the accuracy and other metrics for both the baseline and the advanced model. You can run the file using the following command: 
+
+```
+python3 evaluate_models.py
 ```
 
 ### Troubleshooting

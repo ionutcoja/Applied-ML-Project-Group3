@@ -1,5 +1,5 @@
 import unittest
-from main import hello_world
+from train_model import hello_world
 
 
 class MainTest(unittest.TestCase):

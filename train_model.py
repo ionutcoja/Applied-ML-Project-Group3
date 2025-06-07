@@ -46,56 +46,27 @@ def train(model, X_train, y_train, X_val, y_val) -> None:
     model.fit(X_train, y_train, val_data)
 
 
-def predict(model, X_test) -> np.ndarray:
-    """
-    Predicts the labels for the test dataset using the trained model.
-    """
-
-    predictions = model.predict(X_test)
-    return predictions
-
-
-def evaluate(model, X_test, y_test) -> None:
-    """
-    Evaluates the model using the test dataset, calculating metrics
-    for model performance.
-    """
-
-    metrics_results = model.evaluate(X_test, y_test)
-    return metrics_results
-
-
 def main():
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
     dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
 
+    # Replace 'ling1' with 'English' and 'ling2' with 'Spanish' in the 'lid' column
+    dataset_train['lid'] = dataset_train['lid'].apply(lambda labels: ['English' if l == 'lang1' else 'Spanish' if l == 'lang2' else l for l in labels])
+    dataset_val['lid'] = dataset_val['lid'].apply(lambda labels: ['English' if l == 'lang1' else 'Spanish' if l == 'lang2' else l for l in labels])
+
     baseline_model = LogisticRegressionClassifier()
     advanced_model = XGBoostClassifier()
 
-    dataset_train, dataset_test = split_data(dataset_train)
+    dataset_train, _ = split_data(dataset_train)
 
     X_train, y_train = preprocess_features(dataset_train)
     X_val, y_val = preprocess_features(dataset_val)
-    X_test, y_test = preprocess_features(dataset_test)
 
     train(baseline_model, X_train, y_train, X_val, y_val)
     train(advanced_model, X_train, y_train, X_val, y_val)
 
     joblib.dump(baseline_model, "logreg_model.joblib")
     joblib.dump(advanced_model, "advanced_model.joblib")
-
-    metrics_results_training = evaluate(baseline_model, X_train, y_train)
-    print("Baseline Model Training:", metrics_results_training)
-
-    metrics_results_test = evaluate(baseline_model, X_test, y_test)
-    print("Baseline Model Test:", metrics_results_test)
-
-    metrics_results_training = evaluate(advanced_model, X_train, y_train)
-    print("Advanced Model Training:", metrics_results_training)
-
-    metrics_results_test = evaluate(advanced_model, X_test, y_test)
-    print("Advanced Model Test:", metrics_results_test)
-
 
 if __name__ == "__main__":
     main()
