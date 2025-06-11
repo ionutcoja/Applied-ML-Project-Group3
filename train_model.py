@@ -3,8 +3,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
-from project_name.models.xgb_model import XGBoostClassifier
 from project_name.models.logistic_regression_model import LogisticRegressionClassifier
+from project_name.models.DNN import DNNClassifier
 import joblib
 
 
@@ -51,18 +51,21 @@ def main():
     dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
 
     baseline_model = LogisticRegressionClassifier()
-    advanced_model = XGBoostClassifier()
 
     dataset_train, _ = split_data(dataset_train)
 
     X_train, y_train = preprocess_features(dataset_train)
     X_val, y_val = preprocess_features(dataset_val)
 
+    input_dim = X_train.shape[1]  # number of features
+    advanced_model = DNNClassifier(input_dim=input_dim)
+
     train(baseline_model, X_train, y_train, X_val, y_val)
     train(advanced_model, X_train, y_train, X_val, y_val)
 
     joblib.dump(baseline_model, "logreg_model.joblib")
     joblib.dump(advanced_model, "advanced_model.joblib")
+    
 
 if __name__ == "__main__":
     main()
