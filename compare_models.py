@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold, train_test_split
-from scipy.stats import ttest_rel
+from scipy.stats import ttest_rel, t
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
 from project_name.models.xgb_model import XGBoostClassifier
@@ -79,6 +79,20 @@ def main():
     else:
         print("=> No statistically significant difference.")
 
+    # Compute 95% Confidence Interval for the difference in F1 scores
+    diff = scores_xgb - scores_logreg
+    mean_diff = np.mean(diff)
+    std_diff = np.std(diff, ddof=1)
+    n = len(diff)
+    sem_diff = std_diff / np.sqrt(n)
+
+    alpha = 0.05
+    t_crit = t.ppf(1 - alpha/2, df=n-1)
+
+    ci_lower = mean_diff - t_crit * sem_diff
+    ci_upper = mean_diff + t_crit * sem_diff
+
+    print(f"\n95% Confidence Interval for the difference in mean F1 scores: ({ci_lower:.4f}, {ci_upper:.4f})")
 
 if __name__ == "__main__":
     main()
