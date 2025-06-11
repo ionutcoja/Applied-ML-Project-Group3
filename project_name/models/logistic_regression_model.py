@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression as LogReg
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from typing import Tuple
+from sklearn.metrics import f1_score
 
 
 class LogisticRegressionClassifier(Model):
@@ -84,7 +85,7 @@ class LogisticRegressionClassifier(Model):
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> str:
         """
         Evaluates the model and returns a formatted string of metrics:
-        accuracy, classification report, and confusion matrix.
+        accuracy, classification report, confusion matrix, and F1 score.
 
         Args:
             X (np.ndarray): Feature matrix.
@@ -97,13 +98,15 @@ class LogisticRegressionClassifier(Model):
         y = np.asarray(y)
 
         accuracy = accuracy_score(y, y_pred)
+        f1 = f1_score(y, y_pred, average="weighted")
         report = classification_report(y, y_pred)
         matrix = confusion_matrix(y, y_pred)
 
         formatted_metrics = (
             f"Evaluation Metrics\n"
             f"{'='*40}\n"
-            f"Accuracy: {accuracy:.4f}\n\n"
+            f"Accuracy: {accuracy:.4f}\n"
+            f"F1 Score: {f1:.4f}\n\n"
             f"Classification Report:\n{report}\n"
             f"Confusion Matrix:\n{matrix}\n"
         )

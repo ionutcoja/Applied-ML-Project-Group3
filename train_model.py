@@ -50,10 +50,6 @@ def main():
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
     dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
 
-    # Replace 'ling1' with 'English' and 'ling2' with 'Spanish' in the 'lid' column
-    dataset_train['lid'] = dataset_train['lid'].apply(lambda labels: ['English' if l == 'lang1' else 'Spanish' if l == 'lang2' else l for l in labels])
-    dataset_val['lid'] = dataset_val['lid'].apply(lambda labels: ['English' if l == 'lang1' else 'Spanish' if l == 'lang2' else l for l in labels])
-
     baseline_model = LogisticRegressionClassifier()
     advanced_model = XGBoostClassifier()
 

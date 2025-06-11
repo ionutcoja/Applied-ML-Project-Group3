@@ -2,7 +2,7 @@ from project_name.models.model import Model
 import numpy as np
 import xgboost as xgb
 from typing import Tuple
-from sklearn.metrics import accuracy_score, log_loss
+from sklearn.metrics import accuracy_score, log_loss, classification_report, confusion_matrix, f1_score
 
 
 class XGBoostClassifier(Model):
@@ -82,23 +82,35 @@ class XGBoostClassifier(Model):
         return np.argmax(probs, axis=1)
 
 
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> dict[float, float]:
+    def evaluate(self, X: np.ndarray, y: np.ndarray) -> str:
         """
-        Evaluates the model using accuracy and log loss.
+        Evaluates the model and returns a formatted string of metrics:
+        accuracy, classification report, confusion matrix, log loss, and F1 score.
 
         Args:
-            X: A 2D array of lists of embeddings
-            y: A 1D array of true labels
+            X: A 2D array of input features.
+            y: A 1D array of true labels.
 
         Returns:
-            Tuple of (log loss, accuracy)
+            str: A formatted string with evaluation metrics.
         """
         X = np.asarray(X)
         y = np.asarray(y)
         probs = self._model.predict_proba(X)
         preds = np.argmax(probs, axis=1)
 
-        loss = log_loss(y, probs)
         acc = accuracy_score(y, preds)
+        f1 = f1_score(y, preds, average="weighted")
+        report = classification_report(y, preds)
+        matrix = confusion_matrix(y, preds)
 
-        return {"loss": loss, "accuracy": acc}
+        formatted_metrics = (
+            f"Evaluation Metrics\n"
+            f"{'='*40}\n"
+            f"Accuracy: {acc:.4f}\n"
+            f"F1 Score: {f1:.4f}\n"
+            f"Classification Report:\n{report}\n"
+            f"Confusion Matrix:\n{matrix}\n"
+        )
+
+        return formatted_metrics

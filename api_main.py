@@ -22,11 +22,18 @@ def root():
 @app.post("/predict")
 def predict(data: InputData):
     try:
+        # Convert stringified lists to actual Python lists
+        words = eval(data.words)
+        lids = eval(data.lid)
+
+        # Convert readable labels to internal format
+        lids = ['lang1' if l == 'English' else 'lang2' if l == 'Spanish' else l for l in lids]
+
         df = pd.DataFrame([{
             "joined_text": "",
-            "sa": "neutral",
-            "words": data.words,
-            "lid": data.lid
+            "sa": "neutral",  # Dummy placeholder if needed
+            "words": str(words),
+            "lid": str(lids)
         }])
 
         parse_words_dataset(df)
@@ -38,4 +45,8 @@ def predict(data: InputData):
         return {"prediction": label_mapping[int(pred[0])]}
 
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(
+            status_code=400,
+            detail=f"Prediction failed. Please ensure 'words' and 'lid' are valid stringified lists and contain matching lengths. Error: {str(e)}"
+        )
+

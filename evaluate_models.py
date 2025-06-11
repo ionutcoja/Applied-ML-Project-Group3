@@ -8,8 +8,6 @@ def main():
     advanced_model = joblib.load("advanced_model.joblib")
     
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-    # Replace 'lang1' with 'English' and 'lang2' with 'Spanish' in the 'lid' column
-    dataset_train['lid'] = dataset_train['lid'].apply(lambda labels: ['English' if l == 'ling1' else 'Spanish' if l == 'ling2' else l for l in labels])
     
     dataset_train, dataset_test = split_data(dataset_train)
 
