@@ -17,10 +17,10 @@ def main():
     metrics_results_training = baseline_model.evaluate(X_train, y_train)
     print("Baseline Model Training:", metrics_results_training)
 
-    metrics_results_test = advanced_model.evaluate(X_test, y_test)
+    metrics_results_test = baseline_model.evaluate(X_test, y_test)
     print("Baseline Model Test:", metrics_results_test)
 
-    metrics_results_training = baseline_model.evaluate(X_train, y_train)
+    metrics_results_training = advanced_model.evaluate(X_train, y_train)
     print("Advanced Model Training:", metrics_results_training)
 
     metrics_results_test = advanced_model.evaluate(X_test, y_test)
