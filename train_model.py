@@ -1,26 +1,10 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words
 from project_name.models.logistic_regression_model import LogisticRegressionClassifier
 from project_name.models.DNN import DNNClassifier
 import joblib
-
-
-def split_data(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Splits a dataset into training and testing
-    """
-
-    dataset_train, dataset_test = train_test_split(
-        dataset,
-        test_size=0.2,
-        random_state=42,
-        stratify=dataset['sa']
-    )
-
-    return dataset_train, dataset_test
 
 
 def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
@@ -36,32 +20,29 @@ def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     return X, y
 
 
-def train(model, X_train, y_train, X_val, y_val) -> None:
+def train(model, X_train, y_train) -> None:
     """
     Trains the model using the training dataset after compacting the
     input vectors.
     """
     # only pass validation data to the advanced model
-    val_data = (X_val, y_val) if isinstance(model, XGBoostClassifier) else None
+    val_data = None
     model.fit(X_train, y_train, val_data)
 
 
 def main():
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-    dataset_val = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
 
     baseline_model = LogisticRegressionClassifier()
 
-    dataset_train, _ = split_data(dataset_train)
-
     X_train, y_train = preprocess_features(dataset_train)
-    X_val, y_val = preprocess_features(dataset_val)
 
-    input_dim = X_train.shape[1]  # number of features
+    # number of features for DNN
+    input_dim = X_train.shape[1]  
     advanced_model = DNNClassifier(input_dim=input_dim)
 
-    train(baseline_model, X_train, y_train, X_val, y_val)
-    train(advanced_model, X_train, y_train, X_val, y_val)
+    train(baseline_model, X_train, y_train)
+    train(advanced_model, X_train, y_train)
 
     joblib.dump(baseline_model, "logreg_model.joblib")
     joblib.dump(advanced_model, "advanced_model.joblib")

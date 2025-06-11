@@ -3,8 +3,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
-
-from project_name.models.model import Model  # Assuming same base class
+from project_name.models.model import Model
 
 
 class DNNClassifier(Model):

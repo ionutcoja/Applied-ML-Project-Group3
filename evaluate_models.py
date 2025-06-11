@@ -1,6 +1,6 @@
 import pandas as pd
 import joblib
-from train_model import split_data, preprocess_features
+from train_model import preprocess_features
 from sklearn.metrics import f1_score 
 import numpy as np
 
@@ -49,13 +49,13 @@ def bootstrap_test(models, X_test, y_test, metric_func, n_bootstrap=1000):
     else:
         print("=> No statistically significant difference between models.")
 
+
 def main():
     baseline_model = joblib.load("logreg_model.joblib")
     advanced_model = joblib.load("advanced_model.joblib")
     
     dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-    
-    dataset_train, dataset_test = split_data(dataset_train)
+    dataset_test = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
 
     X_train, y_train = preprocess_features(dataset_train)
     X_test, y_test = preprocess_features(dataset_test)
