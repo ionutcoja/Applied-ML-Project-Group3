@@ -114,3 +114,10 @@ class XGBoostClassifier(Model):
         )
 
         return formatted_metrics
+
+    def evaluate_metrics(self, X: np.ndarray, y: np.ndarray) -> dict:
+        y_pred = self.predict(X)
+        return {
+            "accuracy": accuracy_score(y, y_pred),
+            "f1": f1_score(y, y_pred, average="weighted")
+        }
