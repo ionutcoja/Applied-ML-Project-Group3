@@ -17,7 +17,7 @@ def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, bat
     lids_list = df['lid'].tolist()
 
     # If the majority of the words are in Spanish, use the Spanish model; otherwise, use the multilingual model
-    use_spanish = [i for i, lids in enumerate(lids_list) if lids.count('Spanish') > len(lids) / 2]
+    use_spanish = [i for i, lids in enumerate(lids_list) if lids.count('lang2') > len(lids) / 2]
     use_multilingual = [i for i in range(len(lids_list)) if i not in use_spanish]
 
     embeddings = [None] * len(texts)
