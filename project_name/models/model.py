@@ -20,7 +20,8 @@ class Model():
     
     @property
     def parameters(self) -> dict:
-        """Getter for _parameters
+        """
+        Getter for _parameters
 
         Returns:
             str: deepcopy of _parameters
