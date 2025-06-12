@@ -28,14 +28,13 @@ class Model():
         return deepcopy(self._parameters)
 
     @abstractmethod
-    def fit(self, observations: np.ndarray, ground_truth: np.ndarray, validation_data = None) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Abstract method fit: fits the observations for a given model
 
         Arguments:
             observations
             ground_truth
-            validation_data: optional validation data
         Returns:
                 None
             """

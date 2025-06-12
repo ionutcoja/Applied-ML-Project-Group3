@@ -50,7 +50,7 @@ class LogisticRegressionClassifier(Model):
             "hyperparameters": self._model.get_params()
         }
 
-    def fit(self, X: np.ndarray, y: np.ndarray, validation_data = None) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Fit method: fits the model
         to the provided observations and ground truth

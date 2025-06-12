@@ -37,7 +37,7 @@ class DNNClassifier(Model):
             "batch_size": batch_size,
         }
 
-    def fit(self, X: np.ndarray, y: np.ndarray, validation_data=None) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         self.model.train()
 
         X_tensor = torch.tensor(X, dtype=torch.float32).to(self.device)
