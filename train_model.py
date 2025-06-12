@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import joblib
-from imblearn.over_sampling import SMOTE
 
 from project_name.features.text_cleaning import parse_words_dataset
 from project_name.features.text_embeddings import embedding_words

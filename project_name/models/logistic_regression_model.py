@@ -2,7 +2,6 @@ from project_name.models.model import Model
 import numpy as np
 from sklearn.linear_model import LogisticRegression as LogReg
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from typing import Tuple
 from sklearn.metrics import f1_score
 
 
