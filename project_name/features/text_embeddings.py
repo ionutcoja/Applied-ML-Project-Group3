@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-
+# we load the models from Hugging Face here
 eng_model = SentenceTransformer('sentence-transformers/LaBSE')
 spanish_model_name = "dccuchile/bert-base-spanish-wwm-cased"
 spanish_tokenizer = AutoTokenizer.from_pretrained(spanish_model_name)
@@ -13,6 +13,20 @@ spanish_model = AutoModel.from_pretrained(spanish_model_name)
 
 
 def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, batch_size=16)-> np.ndarray:
+    """
+     Generate embeddings for a DataFrame of texts using either a Spanish BERT model,
+     or a multilingual LaBSE model for english and "other" tokens.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing 'joined_text' (text to embed) and 'lid' (language IDs per word).
+        spanish_model: Pretrained Spanish BERT model.
+        spanish_tokenizer: Tokenizer for the Spanish model.
+        multilingual_model: SentenceTransformer model for English embeddings.
+        batch_size (int, optional): Batch size for encoding. Defaults to 16.
+
+    Returns:
+        np.ndarray: Array of embeddings for each text in the DataFrame.
+    """
     texts = df['joined_text'].tolist()
     lids_list = df['lid'].tolist()
 
@@ -43,5 +57,14 @@ def get_embeddings(df, spanish_model, spanish_tokenizer, multilingual_model, bat
 
 
 def embedding_words(df: pd.DataFrame) -> np.ndarray:
+    """
+     Wrapper function to obtain embeddings for a DataFrame using predefined Spanish and English models.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing 'joined_text' and 'lid' columns.
+
+    Returns:
+        np.ndarray: Array embeddings for each text in the DataFrame.
+    """
     X = get_embeddings(df, spanish_model, spanish_tokenizer, eng_model)
     return np.array(X, dtype=np.float32)
