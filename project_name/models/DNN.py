@@ -46,7 +46,7 @@ class DNNClassifier(Model):
         dataset = torch.utils.data.TensorDataset(X_tensor, y_tensor)
         loader = torch.utils.data.DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
 
-        for epoch in range(self.epochs):
+        for _ in range(self.epochs):
             epoch_loss = 0
             for batch_x, batch_y in loader:
                 self.optimizer.zero_grad()
@@ -84,10 +84,3 @@ class DNNClassifier(Model):
             f"Confusion Matrix:\n{matrix}\n"
         )
         return formatted_metrics
-
-    def evaluate_metrics(self, X: np.ndarray, y: np.ndarray) -> dict:
-        y_pred = self.predict(X)
-        return {
-            "accuracy": accuracy_score(y, y_pred),
-            "f1": f1_score(y, y_pred, average="weighted")
-        }
