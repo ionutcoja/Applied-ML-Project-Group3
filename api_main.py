@@ -54,8 +54,6 @@ def predict(data: InputData):
         lids = ['lang1' if l == 'English' else 'lang2' if l == 'Spanish' else l for l in lids]
 
         df = pd.DataFrame([{
-            "joined_text": "",
-            "sa": "neutral",  # Dummy placeholder if needed
             "words": str(words),
             "lid": str(lids)
         }])
