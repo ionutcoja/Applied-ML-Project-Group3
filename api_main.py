@@ -12,11 +12,11 @@ class InputData(BaseModel):
     Input data model for prediction endpoint.
 
     Attributes:
-        words (str): Stringified list of words
-        lid (str): Stringified list of language identifiers
+        words (str): Space-separated words (e.g., "sad mundo")
+        lid (str): Space-separated language tags (e.g., "English Spanish")
     """
-    words: str  #this is a stringified list: "['sad', 'mundo']"
-    lid: str  #this is a stringified list: "['English', 'Spanish']"
+    words: str
+    lid: str
 
 model = joblib.load("advanced_model.joblib")
 
@@ -46,16 +46,18 @@ def predict(data: InputData):
     """
 
     try:
-        # Convert stringified lists to actual Python lists
-        words = eval(data.words)
-        lids = eval(data.lid)
+        # Split input strings by space
+        words = data.words.strip().split()
+        lids = data.lid.strip().split()
 
-        # Convert readable labels to internal format
-        lids = ['lang1' if l == 'English' else 'lang2' if l == 'Spanish' else l for l in lids]
+        if len(words) != len(lids):
+            raise ValueError("The number of words and language tags must match.")
+
+        # Change the lids tags to lang1 and lang2
+        lids = ['lang1' if l == 'English' else 'lang2' if l == 'Spanish' else l for l in lids
+        ]
 
         df = pd.DataFrame([{
-            "joined_text": "",
-            "sa": "neutral",  # Dummy placeholder if needed
             "words": str(words),
             "lid": str(lids)
         }])

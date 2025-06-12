@@ -2,7 +2,13 @@ import streamlit as st
 import joblib
 import pandas as pd
 import os
+import sys
+from project_name.features.text_cleaning import parse_words_dataset
+from project_name.features.text_embeddings import embedding_words
 
+
+# Ensure the project directory is in the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 st.title("Model Deployment")
 
@@ -20,8 +26,8 @@ else:
 
 # 3. Input data for prediction
 st.header("Input Data Point")
-words = st.text_input("Words (as a Python list, e.g. ['hello', 'world'])")
-lid = st.text_input("LID (as a Python list, e.g. ['lang1', 'lang1'])")
+words_input = st.text_input("Enter words (space-separated, e.g. 'hello world')")
+lids_input = st.text_input("Enter corresponding LIDs (space-separated, e.g. 'lang1 lang1')")
 
 if st.button("Predict"):
     if model is None:
@@ -29,14 +35,26 @@ if st.button("Predict"):
     else:
         try:
             # Convert string input to Python lists
-            words_list = eval(words)
-            lid_list = eval(lid)
-            df = pd.DataFrame([{
-                "words": words_list,
-                "lid": lid_list
-            }])
-            # You may need to preprocess df here, depending on your pipeline
-            pred = model.predict(df)
-            st.success(f"Prediction: {pred[0]}")
+            words = words_input.strip().split()
+            lids = lids_input.strip().split()
+            
+            lid_map = {"English": "lang1", "Spanish": "lang2"}
+            lids = [lid_map.get(tag.lower(), tag) for tag in lids]
+            
+            if len(words) != len(lids):
+                st.error("The number of words must match the number of LID tags.")
+            else:
+                df = pd.DataFrame([{
+                    "words": words,
+                    "lid": lids
+                }])
+                
+                parse_words_dataset(df)
+                result = embedding_words(df)
+                X = result
+                
+                pred = model.predict(X)
+                label_mapping = {2: 'positive', 1: 'neutral', 0: 'negative'}
+                st.success(f"Prediction: {label_mapping[int(pred[0])]}")
         except Exception as e:
             st.error(f"Prediction failed: {e}")
