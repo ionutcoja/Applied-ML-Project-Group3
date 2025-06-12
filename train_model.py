@@ -25,15 +25,6 @@ def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     return X, y
 
 
-def apply_smote(X: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Applies SMOTE to balance class distribution in training data.
-    """
-    smote = SMOTE(random_state=42)
-    X_resampled, y_resampled = smote.fit_resample(X, y)
-    return X_resampled, y_resampled
-
-
 def train(model, X_train, y_train) -> None:
     model.fit(X_train, y_train)
 
@@ -43,17 +34,14 @@ def main():
 
     X_train, y_train = preprocess_features(dataset_train)
 
-    # Apply SMOTE to handle class imbalance
-    X_train_balanced, y_train_balanced = apply_smote(X_train, y_train)
-
     # Initialize models
     baseline_model = LogisticRegressionClassifier()
     input_dim = X_train.shape[1]
     advanced_model = DNNClassifier(input_dim=input_dim)
 
-    # Train models on resampled (balanced) data
-    train(baseline_model, X_train_balanced, y_train_balanced)
-    train(advanced_model, X_train_balanced, y_train_balanced)
+    # Train models on data
+    train(baseline_model, X_train, y_train)
+    train(advanced_model, X_train, y_train)
 
     # Save models
     joblib.dump(baseline_model, "logreg_model.joblib")
