@@ -8,6 +8,13 @@ from project_name.features.text_embeddings import embedding_words
 app = FastAPI()
 
 class InputData(BaseModel):
+    """
+    Input data model for prediction endpoint.
+
+    Attributes:
+        words (str): Stringified list of words
+        lid (str): Stringified list of language identifiers
+    """
     words: str  #this is a stringified list: "['sad', 'mundo']"
     lid: str  #this is a stringified list: "['English', 'Spanish']"
 
@@ -16,11 +23,28 @@ model = joblib.load("advanced_model.joblib")
 
 @app.get("/")
 def root():
+    """
+    Root endpoint to check if the API is running.
+
+    Returns:
+        dict: A message indicating the API status.
+    """
     return {"message": "Model API is running!"}
 
 
 @app.post("/predict")
 def predict(data: InputData):
+    """
+    Predicts sentiment based on input words and language identifiers.
+
+    Args:
+        data (InputData): Input data containing stringified lists of words and language IDs.
+    Returns:
+        dict: The predicted sentiment label.
+    Raises:
+        HTTPException: If prediction fails due to invalid input or processing error.
+    """
+
     try:
         # Convert stringified lists to actual Python lists
         words = eval(data.words)

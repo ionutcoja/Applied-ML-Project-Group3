@@ -26,6 +26,12 @@ def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
 
 
 def train(model, X_train, y_train) -> None:
+    """
+    Trains the model on the provided input data
+
+    Returns:
+        None - we just fit the model
+    """
     model.fit(X_train, y_train)
 
 
