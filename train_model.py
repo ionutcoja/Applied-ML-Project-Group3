@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 import joblib
-from project_name.features.text_cleaning import parse_words_dataset
-from project_name.features.text_embeddings import embedding_words
-from project_name.models.logistic_regression_model import LogisticRegressionClassifier
-from project_name.models.DNN import DNNClassifier
+from project_code.features.text_cleaning import parse_words_dataset
+from project_code.features.text_embeddings import embedding_words
+from project_code.models.logistic_regression_model import LogisticRegressionClassifier
+from project_code.models.DNN import DNNClassifier
 
 
 def preprocess_features(dataset: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
