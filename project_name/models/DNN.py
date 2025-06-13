@@ -1,9 +1,19 @@
+import random
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
 from project_name.models.model import Model
+
+
+def set_seed(seed=42):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 class DNNClassifier(Model):
@@ -17,18 +27,13 @@ class DNNClassifier(Model):
         epochs (int, optional): Number of training epochs. Defaults to 20.
         batch_size (int, optional): Batch size for training. Defaults to 32.
         device (str or torch.device, optional): Device to run the model on ('cuda' or 'cpu'). If None, automatically selects CUDA if available.
-    Attributes:
-        device (str): Device used for computation (for optimization)
-        epochs (int): Number of training epochs.
-        batch_size (int): Batch size for training.
-        model (nn.Sequential): The neural network model.
-        loss_fn (nn.Module): Loss function (CrossEntropyLoss).
-        optimizer (torch.optim.Optimizer): Optimizer (Adam).
-        _parameters (dict): Dictionary of model parameters.
+        seed (int, optional): Random seed for reproducibility. Defaults to 42.
     """
-    def __init__(self, input_dim: int, hidden_dims=[128, 64], num_classes=3, lr=1e-3, epochs=20, batch_size=32, device=None):
+    def __init__(self, input_dim: int, hidden_dims=[128, 64], num_classes=3, lr=1e-3, epochs=20, batch_size=32, device=None, seed=42):
         super().__init__()
-        
+
+        set_seed(seed)  # Ensure reproducibility
+
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.epochs = epochs
         self.batch_size = batch_size
@@ -54,6 +59,7 @@ class DNNClassifier(Model):
             "lr": lr,
             "epochs": epochs,
             "batch_size": batch_size,
+            "seed": seed
         }
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
@@ -71,7 +77,12 @@ class DNNClassifier(Model):
         y_tensor = torch.tensor(y, dtype=torch.long).to(self.device)
 
         dataset = torch.utils.data.TensorDataset(X_tensor, y_tensor)
-        loader = torch.utils.data.DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+
+        # Use seeded generator for reproducible shuffling
+        generator = torch.Generator()
+        generator.manual_seed(self._parameters["seed"])
+
+        loader = torch.utils.data.DataLoader(dataset, batch_size=self.batch_size, shuffle=True, generator=generator)
 
         for _ in range(self.epochs):
             epoch_loss = 0
@@ -104,7 +115,7 @@ class DNNClassifier(Model):
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> str:
         """
         Evaluates the performance of the DNN based on the provided data,
-         and returns a formatted string of metrics (confusion matrix, f1-score and accuracy).
+        and returns a formatted string of metrics (confusion matrix, f1-score and accuracy).
 
         Args:
             X (np.ndarray): Feature data of shape (n_samples, n_features).
