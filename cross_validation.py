@@ -54,3 +54,7 @@ def main():
     
     cross_validate_model(LogisticRegressionClassifier, X_train, y_train, k=5, max_iter=1000)
     cross_validate_model(DNNClassifier, X_train, y_train, k=5, input_dim=input_dim)
+
+
+if __name__ == "__main__":
+    main()
