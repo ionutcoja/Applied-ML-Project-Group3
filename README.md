@@ -119,7 +119,7 @@ model = joblib.load("advanced_model.joblib")
 
 ### Streamlit page
 
-Alternatively, it is possible to use the streamlit interface for model deployment. You can run it using the following command:
+Alternatively, it is possible to use the streamlit interface for model deployment. You can run it using the following command (on Windows):
 ```
 py -m streamlit run app/pages/deployment.py
 ```
