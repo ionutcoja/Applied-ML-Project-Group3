@@ -3,8 +3,8 @@ import joblib
 import pandas as pd
 import os
 import sys
-from project_code.data.text_cleaning import parse_words_dataset
-from project_code.features.text_embeddings import embedding_words
+from project_name.data.text_cleaning import parse_words_dataset
+from project_name.features.text_embeddings import embedding_words
 
 
 # Ensure the project directory is in the Python path

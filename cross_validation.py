@@ -1,7 +1,7 @@
 from sklearn.model_selection import KFold
 import numpy as np
-from project_code.models.logistic_regression_model import LogisticRegressionClassifier
-from project_code.models.DNN import DNNClassifier
+from project_name.models.logistic_regression_model import LogisticRegressionClassifier
+from project_name.models.DNN import DNNClassifier
 import pandas as pd
 from sklearn.metrics import accuracy_score 
 from train_model import preprocess_features
@@ -43,7 +43,8 @@ def cross_validate_model(model_class, X, y, k=5, **kwargs):
     print("\nSummary:")
     print(f"Average Train Accuracy: {np.mean(train_accuracies):.4f}")
     print(f"Average Validation Accuracy: {np.mean(val_accuracies):.4f}\n")
-    
+
+
 def main():
     # the training dataset will be split into k folds
     dataset_train = pd.read_csv('data/sa_spaeng_train.csv')

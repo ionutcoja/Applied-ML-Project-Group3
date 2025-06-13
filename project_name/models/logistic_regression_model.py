@@ -1,4 +1,4 @@
-from project_code.models.model import Model
+from project_name.models.model import Model
 import numpy as np
 from sklearn.linear_model import LogisticRegression as LogReg
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
