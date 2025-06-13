@@ -54,8 +54,8 @@ def main():
     baseline_model = joblib.load("logreg_model.joblib")
     advanced_model = joblib.load("advanced_model.joblib")
     
-    dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
-    dataset_test = pd.read_csv('project_name/data/sa_spaeng_validation.csv')
+    dataset_train = pd.read_csv('data/sa_spaeng_train.csv')
+    dataset_test = pd.read_csv('data/sa_spaeng_validation.csv')
 
     X_train, y_train = preprocess_features(dataset_train)
     X_test, y_test = preprocess_features(dataset_test)

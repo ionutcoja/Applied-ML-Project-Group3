@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pandas as pd
 import joblib
-from project_code.features.text_cleaning import parse_words_dataset
+from project_code.data.text_cleaning import parse_words_dataset
 from project_code.features.text_embeddings import embedding_words
 
 app = FastAPI()

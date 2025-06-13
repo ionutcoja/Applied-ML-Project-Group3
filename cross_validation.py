@@ -46,7 +46,7 @@ def cross_validate_model(model_class, X, y, k=5, **kwargs):
     
 def main():
     # the training dataset will be split into k folds
-    dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
+    dataset_train = pd.read_csv('data/sa_spaeng_train.csv')
 
     X_train, y_train = preprocess_features(dataset_train)
     # input dimension for DNN

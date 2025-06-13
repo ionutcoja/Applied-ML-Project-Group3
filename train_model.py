@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
-from project_code.features.text_cleaning import parse_words_dataset
+from project_code.data.text_cleaning import parse_words_dataset
 from project_code.features.text_embeddings import embedding_words
 from project_code.models.logistic_regression_model import LogisticRegressionClassifier
 from project_code.models.DNN import DNNClassifier
@@ -34,7 +34,7 @@ def train(model, X_train, y_train) -> None:
 
 
 def main():
-    dataset_train = pd.read_csv('project_name/data/sa_spaeng_train.csv')
+    dataset_train = pd.read_csv('data/sa_spaeng_train.csv')
 
     X_train, y_train = preprocess_features(dataset_train)
     # input dimension for DNN

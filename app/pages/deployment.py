@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 import os
 import sys
-from project_code.features.text_cleaning import parse_words_dataset
+from project_code.data.text_cleaning import parse_words_dataset
 from project_code.features.text_embeddings import embedding_words
 
 
