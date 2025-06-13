@@ -49,8 +49,8 @@ def main():
     train(advanced_model, X_train, y_train)
 
     # Save models
-    # joblib.dump(baseline_model, "logreg_model.joblib")
-    # joblib.dump(advanced_model, "advanced_model.joblib")
+    joblib.dump(baseline_model, "logreg_model.joblib")
+    joblib.dump(advanced_model, "advanced_model.joblib")
 
 
 if __name__ == "__main__":
