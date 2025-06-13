@@ -6,13 +6,34 @@ IMPORTANT NOTES:
 
 ## Description of the task
 
-The task at hand consists of assigning a sentiment label ('positive', 'negative', 'neutral') to a sentence containing both Spanish and English words, as well as other types of characters (tags, emojis).
+The task involves sentiment classification of sentences from a bilingual dataset of tweets in English and Spanish. Each sentence may include a mix of both languages, along with tags, emojis, and other special characters (links, etc.). The goal is to assign one of three sentiment labels (`positive`, `negative`, or `neutral`) to each sentence.
+
+## Preprocessing
+
+Before generating embeddings or performing classification, the tweet data is preprocessed to clean and normalize text:
+
+- **Parsing**: Tweets are originally stored as stringified lists. These are parsed to extract words and their corresponding language labels.
+- **Noise Removal**: Mentions (`@user`), retweet markers (`RT`), and URLs are removed.
+- **Accent Normalization**: Accents are stripped from characters to ensure consistency (e.g., *niño* → *nino*).
+- **Casing**: Words are lowercased.
+- **Text Reconstruction**: A `joined_text` column is added by concatenating the cleaned words, ready for embedding and modeling.
+
+> **IMPORTANT** Emojis, hashtags, and other non-standard tokens are retained as their meaning might alter the assigned label.
+
+## Embedders
+
+This project uses two separate models from Hugging Face to embed English and Spanish words:
+
+- **Spanish Text**: To embed Spanish (`lid` = `lang2`) words we use **DCCucuchile BERT** model (dccuchile/bert-base-spanish-wwm-cased).
+- **English and Other Text** For all other cases (including English words), we fall back to a multilingual model **LaBSE** (sentence-transformers/LaBSE).
+
+The code checks language distribution in each text and routes it to the appropriate model.
 
 ## Description of the models
 
 This project uses two models trained on a multi-lingual sentiment analysis task:
 - **Baseline model**: A wrapper around the Logistic Regression classifier from Sklearn  
-- **Advanced model**: An `nn.Sequential` Deep Neural Network from PyTorch Trained using gradient descent, which has:
+- **Advanced model**: An cnn.Sequential` Deep Neural Network from PyTorch Trained using gradient descent, which has:
   - Linear layers  
   - ReLU activation  
   - Normalization layers  
