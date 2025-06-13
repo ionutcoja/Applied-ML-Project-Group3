@@ -121,7 +121,7 @@ model = joblib.load("advanced_model.joblib")
 
 Alternatively, it is possible to use the streamlit interface for model deployment. You can run it using the following command (on Windows):
 ```
-py -m streamlit run app/pages/deployment.py
+streamlit run app/Welcome.py 
 ```
 
-The model can be selected from the top of the page. Afterward, the input, formatted the same as for the API, can be introduced. Lastly, the 'Predict' button should be pressed for a label to be output.
+After that, you should go to the deployment page. The model can be selected from the top of the page. Then, the input, formatted the same as for the API, can be introduced. Lastly, the 'Predict' button should be pressed for a label to be output.
