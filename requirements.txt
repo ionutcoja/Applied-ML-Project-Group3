@@ -8,3 +8,4 @@ tqdm
 joblib
 fastapi
 pydantic
+uvicorn
