@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 ### 2. Run the File for Training the Model
 
-Before starting the API, you must first run the script that preprocesses the features, trains the two models (Logistic Regression and DNN), and saves the trained models' parameters into joblib files. Let it finish before proceeding.
+IF THERE ARE NO JOBLIB FILES PRESENT IN THE REPOSITORY, before starting the API, you must first run the script that preprocesses the features, trains the two models (Logistic Regression and DNN), and saves the trained models' parameters into joblib files. Let it finish before proceeding. IF THE JOBLIB FILES ARE PRESENT THIS STEP SHOULD BE SKIPPED.
 
 ```
 python3 train_model.py
