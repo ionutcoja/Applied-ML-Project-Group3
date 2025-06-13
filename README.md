@@ -1,7 +1,7 @@
 # README
 
 IMPORTANT NOTES:
-- All code was run in Python 3.9
+- All code was run in Python 3.12
 - The two necessary datasets are in the repository, under the 'data' folder. They can also be found here: training - https://www.kaggle.com/datasets/thedevastator/unlock-universal-language-with-the-lince-dataset?select=sa_spaeng_train.csv; validation (used for testing) - https://www.kaggle.com/datasets/thedevastator/unlock-universal-language-with-the-lince-dataset?select=sa_spaeng_validation.csv
 
 ## Description of the task
@@ -14,7 +14,7 @@ Before generating embeddings or performing classification, the tweet data is pre
 
 - **Parsing**: Tweets are originally stored as stringified lists. These are parsed to extract words and their corresponding language labels.
 - **Noise Removal**: Mentions (`@user`), retweet markers (`RT`), and URLs are removed.
-- **Accent Normalization**: Accents are stripped from characters to ensure consistency (e.g., *niño* → *nino*).
+- **Accent Normalization**: Accents are stripped from characters to ensure consistency (e.g., *niño* → *nino*). The same goes for the non-latin letters used to represent emojis. Each such letter was transformed to its latin equivalent.
 - **Casing**: Words are lowercased.
 - **Text Reconstruction**: A `joined_text` column is added by concatenating the cleaned words, ready for embedding and modeling.
 
@@ -24,16 +24,14 @@ Before generating embeddings or performing classification, the tweet data is pre
 
 This project uses two separate models from Hugging Face to embed English and Spanish words:
 
-- **Spanish Text**: To embed Spanish (`lid` = `lang2`) words we use **DCCucuchile BERT** model (dccuchile/bert-base-spanish-wwm-cased).
-- **English and Other Text** For all other cases (including English words), we fall back to a multilingual model **LaBSE** (sentence-transformers/LaBSE).
-
-The code checks language distribution in each text and routes it to the appropriate model.
+- **Spanish Text**: For sentences that contain more than half of the tokens labeled as 'lang2' (Spanish), we use **DCCucuchile BERT** model (dccuchile/bert-base-spanish-wwm-cased), specialized for Spanish.
+- **English and Other Text** For all other cases, we fall back to a multilingual model **LaBSE** (sentence-transformers/LaBSE).
 
 ## Description of the models
 
 This project uses two models trained on a multi-lingual sentiment analysis task:
 - **Baseline model**: A wrapper around the Logistic Regression classifier from Sklearn  
-- **Advanced model**: An cnn.Sequential` Deep Neural Network from PyTorch Trained using gradient descent, which has:
+- **Advanced model**: An nn.Sequential Deep Neural Network from PyTorch Trained using gradient descent, which has:
   - Linear layers  
   - ReLU activation  
   - Normalization layers  
@@ -111,7 +109,7 @@ If you encounter an error about a missing library, install it manually:
 pip install library_name
 ```
 
-### Notes
+### Notes about the API
 
 The API uses the advanced model by default. If you want to change which model the API uses, update the file passed to joblib.load on line 17 of api_main.py from 'advanced_model.joblib' to 'logreg_model.joblib':
 
@@ -119,4 +117,11 @@ The API uses the advanced model by default. If you want to change which model th
 model = joblib.load("advanced_model.joblib")
 ```
 
+### Streamlit page
 
+Alternatively, it is possible to use the streamlit interface for model deployment. You can run it using the following command:
+```
+py -m streamlit run app/pages/deployment.py
+```
+
+The model can be selected from the top of the page. Afterward, the input, formatted the same as for the API, can be introduced. Lastly, the 'Predict' button should be pressed for a label to be output.

@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from project_name.models.model import Model
 
 
+# Add seed to ensure the same parameters are obtained at each training run
 def set_seed(seed=42):
     random.seed(seed)
     np.random.seed(seed)
@@ -32,7 +33,7 @@ class DNNClassifier(Model):
     def __init__(self, input_dim: int, hidden_dims=[128, 64], num_classes=3, lr=1e-3, epochs=20, batch_size=32, device=None, seed=42):
         super().__init__()
 
-        set_seed(seed)  # Ensure reproducibility
+        set_seed(seed) 
 
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.epochs = epochs
